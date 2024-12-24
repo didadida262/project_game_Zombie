@@ -1,4 +1,3 @@
-import cn from "classnames";
 import { useRef, useState } from "react";
 
 import { MainMenu } from "./game/scenes/MainMenu";

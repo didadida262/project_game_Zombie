@@ -1,15 +1,13 @@
 import cn from "classnames";
 import { useEffect } from "react";
-import { ToastContainer } from "react-toastify";
+// import { ToastContainer } from "react-toastify";
 
-import { useTranslation, switchLanguage } from "@/i18n";
 import customToast from "@/components/customToast";
 import Zombie from "@/pages/Zombie/index";
 
 import "react-toastify/dist/ReactToastify.css";
 
 function App() {
-  const { t } = useTranslation();
   useEffect(() => {
     customToast.success("Mounted success!");
   }, []);
