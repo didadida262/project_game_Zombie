@@ -29,33 +29,32 @@ export default function Zombie() {
       <div className="min-w-[calc(100%_-_150px)]">
         <PhaserGame ref={phaserRef} currentActiveScene={currentScene} />
       </div>
-      <div className="w-[120px] text-green-500 h-full py-5">
-        <div>
-          <button className="button" onClick={changeScene}>
-            Change Scene
-          </button>
-        </div>
-        <div>
-          <button
-            disabled={canMoveSprite}
-            className="button"
-            // onClick={moveSprite}
-          >
-            Toggle Movement
-          </button>
-        </div>
-        <div className="spritePosition">
+      <div
+        className={cn(
+          "w-[180px] text-green-500 h-full py-5",
+          "flex flex-col gap-y-4 items-end",
+        )}
+      >
+        <button className="button" onClick={changeScene}>
+          Change Scene
+        </button>
+        <button
+          disabled={canMoveSprite}
+          className="button"
+          // onClick={moveSprite}
+        >
+          Toggle Movement
+        </button>
+        {/* <div className="spritePosition">
           Sprite Position:
-          {/* <pre>{`{\n  x: ${spritePosition.x}\n  y: ${spritePosition.y}\n}`}</pre> */}
-        </div>
-        <div>
-          <button
-            className="button"
-            // onClick={addSprite}
-          >
-            Add New Sprite
-          </button>
-        </div>
+          <pre>{`{\n  x: ${spritePosition.x}\n  y: ${spritePosition.y}\n}`}</pre>
+        </div> */}
+        <button
+          className="button"
+          // onClick={addSprite}
+        >
+          Add New Sprite
+        </button>
       </div>
     </div>
   );

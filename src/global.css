@@ -55,3 +55,9 @@
   margin-right: auto;
   margin-left: auto;
 }
+.button {
+  min-width: 125px;
+  height: 40px;
+  border: 1px solid gray;
+  font-size: 14px;
+}
