@@ -3,10 +3,10 @@ import { GameObjects, Scene } from "phaser";
 import { EventBus } from "../EventBus";
 
 export class MainMenu extends Scene {
-  background: GameObjects.Image;
-  logo: GameObjects.Image;
-  title: GameObjects.Text;
-  logoTween: Phaser.Tweens.Tween | null;
+  background: GameObjects.Image | undefined;
+  logo: GameObjects.Image | undefined;
+  title: GameObjects.Text | undefined;
+  logoTween: Phaser.Tweens.Tween | null | undefined;
 
   constructor() {
     super("MainMenu");
@@ -57,6 +57,7 @@ export class MainMenu extends Scene {
         repeat: -1,
         onUpdate: () => {
           if (vueCallback) {
+            if (!this.logo) return;
             vueCallback({
               x: Math.floor(this.logo.x),
               y: Math.floor(this.logo.y),
