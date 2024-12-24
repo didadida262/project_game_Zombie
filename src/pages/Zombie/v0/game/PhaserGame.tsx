@@ -1,3 +1,10 @@
+/*
+ * @Description:
+ * @Author: didadida262
+ * @Date: 2024-12-24 13:44:59
+ * @LastEditors: didadida262
+ * @LastEditTime: 2024-12-24 15:01:48
+ */
 import { forwardRef, useEffect, useLayoutEffect, useRef } from "react";
 
 import { EventBus } from "./EventBus";
@@ -19,6 +26,7 @@ export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(
     useLayoutEffect(() => {
       if (game.current === null) {
         game.current = StartGame("game-container");
+
         if (typeof ref === "function") {
           ref({ game: game.current, scene: null });
         } else if (ref) {
@@ -37,7 +45,6 @@ export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(
     }, [ref]);
 
     useEffect(() => {
-      console.log("222>>>>>>>>>>>useEffect");
       EventBus.on("current-scene-ready", (scene_instance: Phaser.Scene) => {
         if (currentActiveScene && typeof currentActiveScene === "function") {
           currentActiveScene(scene_instance);
