@@ -31,8 +31,8 @@ export default function Zombie() {
       </div>
       <div
         className={cn(
-          "w-[180px] text-green-500 h-full py-5",
-          "flex flex-col gap-y-4 items-end",
+          "w-[180px] text-green-500 h-full py-5 markBorderR",
+          "flex flex-col gap-y-4 items-center",
         )}
       >
         <button className="button" onClick={changeScene}>
