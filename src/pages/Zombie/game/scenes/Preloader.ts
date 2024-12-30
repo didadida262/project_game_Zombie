@@ -8,9 +8,11 @@ export class Preloader extends Scene {
   scoreText: Phaser.GameObjects.Text | undefined;
   score!: number;
   bombs: Phaser.Physics.Arcade.Group | undefined;
+  gameOver: Boolean;
   constructor() {
     super("Preloader");
     this.score = 0;
+    this.gameOver = false;
   }
   init() {
     // //  We loaded this image in our Boot Scene, so we can display it here
@@ -44,36 +46,41 @@ export class Preloader extends Scene {
     player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody,
     star: any,
   ) {
-    if (star.disableBody) {
-      star.disableBody(true, true);
-      this.score += 10;
-      this.scoreText.setText("Score: " + this.score);
-      if (this.stars.countActive(true) === 0) {
-        stars.children.iterate(function (child) {
-          child.enableBody(true, child.x, 0, true, true);
-        });
+    if (!star.disableBody || !this.scoreText || !this.stars || !this.bombs)
+      return;
+    star.disableBody(true, true);
+    this.score += 10;
+    this.scoreText.setText("Score: " + this.score);
+    if (this.stars.countActive(true) === 0) {
+      //   this.stars.children.iterate((child: any) => {
+      //     if (child.enableBody) {
+      //       child.enableBody(true, child.x, 0, true, true);
+      //     }
+      //   });
+      this.stars.children.iterate((child: any) =>
+        child.enableBody(Phaser.Math.FloatBetween(0.4, 0.8)),
+      );
 
-        var x =
-          player.x < 400
-            ? Phaser.Math.Between(400, 800)
-            : Phaser.Math.Between(0, 400);
+      var x =
+        player.x < 400
+          ? Phaser.Math.Between(400, 800)
+          : Phaser.Math.Between(0, 400);
 
-        var bomb = this.bombs.create(x, 16, "bomb");
-        bomb.setBounce(1);
-        bomb.setCollideWorldBounds(true);
-        bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
-      }
+      var bomb = this.bombs.create(x, 16, "bomb");
+      bomb.setBounce(1);
+      bomb.setCollideWorldBounds(true);
+      bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
     }
   }
   hitBomb(
     player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody,
     bomb: Phaser.Physics.Arcade.Group,
   ) {
-    if (!this.palyer) return;
+    if (!this.player) return;
     this.physics.pause();
     this.player.setTint(0xff0000);
     this.player.anims.play("turn");
-    gameOver = true;
+    this.gameOver = true;
   }
   create() {
     //  When all the assets have loaded, it's often worth creating global objects here that the rest of the game can use.
@@ -135,13 +142,13 @@ export class Preloader extends Scene {
     this.physics.add.overlap(
       this.player,
       this.stars,
-      this.collectStar,
-      null,
+      this.collectStar as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+      undefined,
       this,
     );
     this.scoreText = this.add.text(16, 16, "score: 0", {
       fontSize: "32px",
-      fill: "#000",
+      color: "#000",
     });
 
     this.bombs = this.physics.add.group();
@@ -149,8 +156,9 @@ export class Preloader extends Scene {
     this.physics.add.collider(
       this.player,
       this.bombs,
-      this.hitBomb,
-      null,
+      this
+        .hitBomb as unknown as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+      undefined,
       this,
     );
   }

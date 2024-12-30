@@ -1,6 +1,5 @@
 import cn from "classnames";
-import { AUTO, Game } from "phaser";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 import { MainMenu } from "./game/scenes/MainMenu";
 import { IRefPhaserGame, PhaserGame } from "./game/PhaserGame";
