@@ -67,7 +67,7 @@ export default function Zombie() {
   return (
     <div className="page-layout h-full flex justify-between items-center">
       <PhaserGame ref={phaserRef} currentActiveScene={currentScene} />
-      <div className="markBorderR">
+      <div className="">
         <div>
           <button className="button" onClick={changeScene}>
             Change Scene

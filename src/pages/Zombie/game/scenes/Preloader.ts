@@ -100,6 +100,7 @@ export class Preloader extends Scene {
 
     this.player.setBounce(0.2);
     this.player.setCollideWorldBounds(true);
+    this.physics.add.collider(this.player, this.platforms);
 
     this.anims.create({
       key: "left",
