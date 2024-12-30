@@ -1,40 +1,23 @@
 import { Scene } from "phaser";
 
 export class Preloader extends Scene {
-  platforms: Phaser.Physics.Arcade.StaticGroup | undefined;
-  player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody | undefined;
-  cursors: Phaser.Types.Input.Keyboard.CursorKeys | undefined;
-  stars: Phaser.Physics.Arcade.Group | undefined;
-  scoreText: Phaser.GameObjects.Text | undefined;
+  platforms!: Phaser.Physics.Arcade.StaticGroup;
+  player!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+  cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
+  stars!: Phaser.Physics.Arcade.Group;
+  scoreText!: Phaser.GameObjects.Text;
   score!: number;
-  bombs: Phaser.Physics.Arcade.Group | undefined;
-  gameOver: Boolean;
+  bombs!: Phaser.Physics.Arcade.Group;
+  gameOver!: Boolean;
   constructor() {
     super("Preloader");
     this.score = 0;
     this.gameOver = false;
   }
-  init() {
-    // //  We loaded this image in our Boot Scene, so we can display it here
-  }
-
-  preload() {
-    // //  Load the assets for the game - Replace with your own assets
-    this.load.image("sky", "assets/sky.png");
-    this.load.image("ground", "assets/platform.png");
-    this.load.image("star", "assets/star.png");
-    this.load.image("bomb", "assets/bomb.png");
-    this.load.spritesheet("dude", "assets/dude.png", {
-      frameWidth: 32,
-      frameHeight: 48,
-    });
-  }
   collectStar(
     player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody,
     star: any,
   ) {
-    if (!star.disableBody || !this.scoreText || !this.stars || !this.bombs)
-      return;
     star.disableBody(true, true);
     this.score += 10;
     this.scoreText.setText("Score: " + this.score);
@@ -58,32 +41,19 @@ export class Preloader extends Scene {
     player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody,
     bomb: Phaser.Physics.Arcade.Group,
   ) {
-    if (!player) return;
     this.physics.pause();
     player.setTint(0xff0000);
     player.anims.play("turn");
     this.gameOver = true;
   }
-  create() {
-    //  When all the assets have loaded, it's often worth creating global objects here that the rest of the game can use.
-    //  For example, you can define global animations here, so we can use them in other scenes.
-
-    //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
-    //   this.scene.start("MainMenu");
-    this.add.image(400, 300, "sky");
-    this.platforms = this.physics.add.staticGroup();
-
-    this.platforms.create(400, 568, "ground").setScale(2).refreshBody();
-    this.platforms.create(600, 400, "ground");
-    this.platforms.create(50, 250, "ground");
-    this.platforms.create(750, 220, "ground");
-
+  initPlayer() {
     this.player = this.physics.add.sprite(100, 450, "dude");
-
+    // 碰撞黏度
     this.player.setBounce(0.2);
+    // 边界检测
     this.player.setCollideWorldBounds(true);
+    // 游戏物理碰撞检测
     this.physics.add.collider(this.player, this.platforms);
-
     this.anims.create({
       key: "left",
       frames: this.anims.generateFrameNumbers("dude", { start: 0, end: 3 }),
@@ -106,7 +76,37 @@ export class Preloader extends Scene {
     if (this.input.keyboard) {
       this.cursors = this.input.keyboard.createCursorKeys();
     }
+  }
+  init() {
+    // //  We loaded this image in our Boot Scene, so we can display it here
+  }
 
+  preload() {
+    // //  Load the assets for the game - Replace with your own assets
+    this.load.image("sky", "assets/sky.png");
+    this.load.image("ground", "assets/platform.png");
+    this.load.image("star", "assets/star.png");
+    this.load.image("bomb", "assets/bomb.png");
+    this.load.spritesheet("dude", "assets/dude.png", {
+      frameWidth: 32,
+      frameHeight: 48,
+    });
+  }
+
+  create() {
+    //  When all the assets have loaded, it's often worth creating global objects here that the rest of the game can use.
+    //  For example, you can define global animations here, so we can use them in other scenes.
+
+    //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
+    //   this.scene.start("MainMenu");
+    this.add.image(400, 300, "sky");
+    this.platforms = this.physics.add.staticGroup();
+    this.platforms.create(400, 568, "ground").setScale(2).refreshBody();
+    this.platforms.create(600, 400, "ground");
+    this.platforms.create(50, 250, "ground");
+    this.platforms.create(750, 220, "ground");
+
+    this.initPlayer();
     this.stars = this.physics.add.group({
       key: "star",
       repeat: 11,
@@ -139,6 +139,7 @@ export class Preloader extends Scene {
       this,
     );
   }
+  // 每帧执行
   update() {
     if (this.gameOver) return;
     if (!this.cursors || !this.player) return;
